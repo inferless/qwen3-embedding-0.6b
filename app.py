@@ -22,8 +22,7 @@ class RequestObjects(BaseModel):
 class ResponseObjects(BaseModel):
     query_embeddings: List[float] = Field(default="Test output")
     document_embeddings: List[float] = Field(default="Test output")
-    similarity: List[float]= Field(default="Test output")
-
+    similarity: Optional[float] = 0.7897
 
 class InferlessPythonModel:
     def initialize(self, context=None):
@@ -47,20 +46,19 @@ class InferlessPythonModel:
             normalize_embeddings=request.normalize_embeddings,
             convert_to_numpy=True
         )
-        sim_matrix = None
+        
+        result = {}
+        result["query_embeddings"] = q_emb.tolist()
+        result["document_embeddings"] = d_emb.tolist()
+        
         if request.compute_similarity:
             sim_tensor = self.model.similarity(
                 torch.from_numpy(q_emb).to(self.model.device),
                 torch.from_numpy(d_emb).to(self.model.device)
             )
-            sim_matrix = sim_tensor.cpu().tolist()[0]
-
-        response = ResponseObjects(
-            query_embeddings=q_emb.tolist(),
-            document_embeddings=d_emb.tolist(),
-            similarity=sim_matrix
-        )
-        return response
-
+            result["similarity"] = sim_tensor.cpu().tolist()[0][0]
+            
+        return ResponseObjects(**result)
+        
     def finalize(self):
         self.model = None
