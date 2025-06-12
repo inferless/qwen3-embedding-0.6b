@@ -37,13 +37,13 @@ class InferlessPythonModel:
 
     def infer(self, request: RequestObjects) -> ResponseObjects:
         q_emb = self.model.encode(
-            request.queries,
+            request.query,
             prompt_name=request.prompt_name,
             normalize_embeddings=request.normalize_embeddings,
             convert_to_numpy=True
         )
         d_emb = self.model.encode(
-            request.documents,
+            request.document,
             normalize_embeddings=request.normalize_embeddings,
             convert_to_numpy=True
         )
