@@ -31,8 +31,7 @@ class InferlessPythonModel:
         snapshot_download(repo_id=self.model_id, allow_patterns=["*.safetensors", "*.json", "tokenizer*"])
         self.model = SentenceTransformer(
             self.model_id,
-            model_kwargs={"attn_implementation": "flash_attention_2",
-                          "device_map": "cuda" if torch.cuda.is_available() else "cpu"},
+            model_kwargs={"device_map": "cuda"},
             tokenizer_kwargs={"padding_side": "left"}
         )
 
@@ -50,15 +49,12 @@ class InferlessPythonModel:
         )
         sim_matrix = None
         if request.compute_similarity:
-            # SentenceTransformers has a built-in helper
-            # (returns torch tensor on the same device)
             sim_tensor = self.model.similarity(
                 torch.from_numpy(q_emb).to(self.model.device),
                 torch.from_numpy(d_emb).to(self.model.device)
             )
-            sim_matrix = sim_tensor.cpu().tolist()
+            sim_matrix = sim_tensor.cpu().tolist()[0]
 
-        # --- Build response --- #
         response = ResponseObjects(
             query_embeddings=q_emb.tolist(),
             document_embeddings=d_emb.tolist(),
