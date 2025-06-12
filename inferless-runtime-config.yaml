@@ -1,9 +1,7 @@
 build:
   cuda_version: "12.1.1"
   python_packages:
-    - accelerate
-    - sentence-transformers
+    - accelerate==1.7.0
+    - sentence-transformers==4.1.0
     - inferless==0.2.13
     - pydantic==2.10.2
-  run:
-    - "pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu126"
