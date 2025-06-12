@@ -22,7 +22,7 @@ class RequestObjects(BaseModel):
 class ResponseObjects(BaseModel):
     query_embeddings: List[float] = Field(default="Test output")
     document_embeddings: List[float] = Field(default="Test output")
-    similarity: Optional[float] = 0.7897
+    similarity: Optional[float] = None
 
 class InferlessPythonModel:
     def initialize(self, context=None):
