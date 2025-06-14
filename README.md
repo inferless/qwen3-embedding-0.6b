@@ -43,9 +43,15 @@ curl --location '<your_inference_url>' \
     --data '{
       "inputs": [
                   {
-                        "name": "prompt",
+                        "name": "query",
                         "shape": [1],
-                        "data": ["Give me a short introduction to large language model."],
+                        "data": ["What is the capital of China?"],
+                        "datatype": "BYTES"
+                      },
+                    {
+                        "name": "document",
+                        "shape": [1],
+                        "data": ["The capital of China is Beijing."],
                         "datatype": "BYTES"
                       }
     ]
